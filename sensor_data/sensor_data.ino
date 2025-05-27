@@ -5,9 +5,6 @@
 // Define I2C address for MPU9250
 #define MPU9250_ADDR 0x68
 
-// Use default I2C bus (Wire) for BMP180
-Adafruit_BMP085 bmp;
-
 // Define a custom I2C bus for MPU9250 (on A4 and A5)
 TwoWire MPUWire = TwoWire();
 
@@ -17,20 +14,10 @@ MPU9250_WE myMPU9250 = MPU9250_WE(&MPUWire, MPU9250_ADDR);
 void setup() {
   Serial.begin(115200);
 
-  // Start the Wire bus for BMP180 (SCL/SDA near AREF)
-  Wire.begin();
-
   // Start the secondary bus for MPU9250 on A4/A5
   MPUWire.begin();
 
 	delay(500);
-
-  // Init BMP180
-  if (!bmp.begin()) {
-    Serial.println("BMP180 not detected. Check wiring.");
-  } else {
-    Serial.println("BMP180 connected.");
-  }
 
   // Init MPU9250
   if (!myMPU9250.init()) {
@@ -88,16 +75,6 @@ void loop() {
 
   Serial.print("MPU Temperature in °C: ");
   Serial.println(tempMPU);
-
-  // BMP180 Data
-  Serial.print("BMP Temperature in °C: ");
-  Serial.println(bmp.readTemperature());
-
-  Serial.print("BMP Pressure in hPa: ");
-  Serial.println(bmp.readPressure() / 100.0);
-
-  Serial.print("BMP Altitude (m): ");
-  Serial.println(bmp.readAltitude());
 
   Serial.println("********************************************");
 
